@@ -308,6 +308,15 @@ func TestListSessions(t *testing.T) {
 	}
 }
 
+func TestListSessions_RejectsUnsafePathSegment(t *testing.T) {
+	root := t.TempDir()
+	for _, bad := range []string{"../escape", "a/b", `a\b`, "..", ""} {
+		if _, err := ListSessions(root, bad); err == nil {
+			t.Errorf("ListSessions(root, %q) expected error, got nil", bad)
+		}
+	}
+}
+
 func TestPeekSession(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "test.jsonl")

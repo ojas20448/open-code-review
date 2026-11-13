@@ -55,6 +55,16 @@ func TestCommentCollector_CommentsForPath(t *testing.T) {
 	if len(got) != 0 {
 		t.Errorf("expected 0 for nonexistent path, got %d", len(got))
 	}
+
+	if count := c.CommentCountForPath("a.go"); count != 2 {
+		t.Errorf("CommentCountForPath(a.go) = %d, want 2", count)
+	}
+	if count := c.CommentCountForPath("b.go"); count != 1 {
+		t.Errorf("CommentCountForPath(b.go) = %d, want 1", count)
+	}
+	if count := c.CommentCountForPath("nonexist.go"); count != 0 {
+		t.Errorf("CommentCountForPath(nonexist.go) = %d, want 0", count)
+	}
 }
 
 func TestCommentCollector_SnapshotAndSince(t *testing.T) {

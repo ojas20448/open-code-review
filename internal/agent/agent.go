@@ -1466,7 +1466,7 @@ func (a *Agent) executeGroupSubtask(ctx context.Context, g FileGroup) (bool, *su
 	// Per-path baselines for concurrency-safe round-delta computation.
 	baseline := make(map[string]int, len(g.Diffs))
 	for _, d := range g.Diffs {
-		baseline[d.NewPath] = len(a.args.CommentCollector.CommentsForPath(d.NewPath))
+		baseline[d.NewPath] = a.args.CommentCollector.CommentCountForPath(d.NewPath)
 	}
 
 	var (

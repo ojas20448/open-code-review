@@ -113,7 +113,11 @@ type SessionSummary struct {
 
 // ListSessions returns lightweight summaries for all sessions in a repo subdir.
 func ListSessions(root, encodedRepo string) ([]SessionSummary, error) {
-	repoDir := filepath.Join(root, encodedRepo)
+	safeRepo, err := safeSegment(encodedRepo)
+	if err != nil {
+		return nil, err
+	}
+	repoDir := filepath.Join(root, safeRepo)
 	entries, err := os.ReadDir(repoDir)
 	if err != nil {
 		return nil, fmt.Errorf("read repo dir: %w", err)

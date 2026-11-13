@@ -50,6 +50,20 @@ func (c *CommentCollector) CommentsForPath(path string) []model.LlmComment {
 	return out
 }
 
+// CommentCountForPath returns the count of comments whose Path matches the given path
+// without allocating a slice copy.
+func (c *CommentCollector) CommentCountForPath(path string) int {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	count := 0
+	for _, cm := range c.comments {
+		if cm.Path == path {
+			count++
+		}
+	}
+	return count
+}
+
 // Snapshot returns the current count of stored comments. Pair with Since /
 // ReplaceSince to operate on the comments added between two points in time
 // (e.g. before / after a scan batch).

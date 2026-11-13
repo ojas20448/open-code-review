@@ -120,3 +120,13 @@ func TestWaitBackground_NoJobIsANoOp(t *testing.T) {
 		t.Errorf("a run that made no request must report nothing, got %+v", rep)
 	}
 }
+
+func TestWaitBackgroundWithTimeout(t *testing.T) {
+	collector := llm.NewRetryCollector()
+	r, _ := newCompressionRunner(t, newBlockingCompressionClient(collector), metaFactory("openai", "fake"))
+
+	// When no job started, should return true immediately
+	if ok := r.WaitBackgroundWithTimeout(100 * time.Millisecond); !ok {
+		t.Error("expected WaitBackgroundWithTimeout to return true when no jobs running")
+	}
+}

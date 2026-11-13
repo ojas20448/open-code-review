@@ -100,6 +100,23 @@ func (r *Runner) WaitBackground() {
 	r.bg.Wait()
 }
 
+// WaitBackgroundWithTimeout waits for background jobs to return within the given
+// timeout. Returns true if all jobs finished before the timeout elapsed, or false
+// if the wait timed out.
+func (r *Runner) WaitBackgroundWithTimeout(timeout time.Duration) bool {
+	done := make(chan struct{})
+	go func() {
+		r.bg.Wait()
+		close(done)
+	}()
+	select {
+	case <-done:
+		return true
+	case <-time.After(timeout):
+		return false
+	}
+}
+
 // TotalInputTokens returns the accumulated input/prompt tokens from all LLM calls.
 func (r *Runner) TotalInputTokens() int64 { return atomic.LoadInt64(&r.totalInputTokens) }
 
