@@ -377,7 +377,7 @@ for (const initialState of ["fresh", "cleaned sparse"]) {
           HOME: directory,
           LC_ALL: "C",
           GIT_CONFIG_NOSYSTEM: "1",
-          GIT_CONFIG_GLOBAL: os.devNull,
+          GIT_CONFIG_GLOBAL: process.platform === "win32" ? "NUL" : os.devNull,
         },
       });
       assert.ifError(result.error);
